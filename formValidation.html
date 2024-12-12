@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Form Validation</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+        .invalid {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Form Validation</h1>
+    <form id="ticketForm">
+        <div>
+            <label for="nama">Nama Pelanggan:</label>
+            <input type="text" id="nama" name="nama">
+            <span class="error" id="errorNama"></span>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+            <span class="error" id="errorEmail"></span>
+        </div>
+        <div>
+            <label for="jam">Jam Keberangkatan:</label>
+            <input type="text" id="jam" name="jam" placeholder="HH.MM">
+            <span class="error" id="errorJam"></span>
+        </div>
+        <div>
+            <label for="tujuan">Tujuan Keberangkatan:</label>
+            <input type="text" id="tujuan" name="tujuan">
+            <span class="error" id="errorTujuan"></span>
+        </div>
+        <div>
+            <label for="jumlah">Jumlah Tiket:</label>
+            <input type="number" id="jumlah" name="jumlah">
+            <span class="error" id="errorJumlah"></span>
+        </div>
+        <button type="button" onclick="validateForm()">Submit</button>
+    </form>
+    <div id="output"></div>
+
+    <script>
+        function validateForm() {
+            let isValid = true;
+
+            // Reset error messages and styles
+            document.querySelectorAll('.error').forEach(e => e.textContent = '');
+            document.querySelectorAll('input').forEach(e => e.classList.remove('invalid'));
+
+            // Get form values
+            const nama = document.getElementById('nama').value.trim(); 
+            const email = document.getElementById('email').value.trim();
+            const jam = document.getElementById('jam').value.trim();
+            const tujuan = document.getElementById('tujuan').value.trim();
+            const jumlah = document.getElementById('jumlah').value.trim();
+
+            // Nama validation
+            if (nama || nama.length > 30) {
+                document.getElementById('errorNama').textContent = 'Nama wajib diisi (maksimum 30 karakter).';
+                document.getElementById('nama').classList.add('invalid');
+                isValid = false;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                document.getElementById('errorEmail').textContent = 'Format email tidak valid.';
+                document.getElementById('email').classList.add('invalid');
+                isValid = false;
+            }
+
+            // Jam validation
+            const jamRegex = /^([01]?\d|2[0-3])\.[0-5]\d$/;
+            if (!jam || !jamRegex.test(jam)) {
+                document.getElementById('errorJam').textContent = 'Jam harus dalam format HH.MM (00.00 - 23.59).';
+                document.getElementById('jam').classList.add('invalid');
+                isValid = false;
+            }
+
+            // Tujuan validation
+            if (!tujuan) {
+                document.getElementById('errorTujuan').textContent = 'Tujuan wajib diisi.';
+                document.getElementById('tujuan').classList.add('invalid');
+                isValid = false;
+            }
+
+            // Jumlah validation
+            const jumlahNum = parseInt(jumlah, 10);
+            if (!jumlah || isNaN(jumlahNum) || jumlahNum < 1 || jumlahNum > 10) {
+                document.getElementById('errorJumlah').textContent = 'Jumlah tiket harus bilangan bulat antara 1 - 10.';
+                document.getElementById('jumlah').classList.add('invalid');
+                isValid = false;
+            }
+
+            // Display output if valid
+            if (isValid) {
+                const output = `
+                    <h2>Data Tiket</h2>
+                    <p>Nama Pelanggan: ${nama}</p>
+                    <p>Email: ${email}</p>
+                    <p>Jam Keberangkatan: ${jam}</p>
+                    <p>Tujuan Keberangkatan: ${tujuan}</p>
+                    <p>Jumlah Tiket: ${jumlah}</p>
+                `;
+                document.getElementById('output').innerHTML = output;
+            } else {
+                document.getElementById('output').innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
